@@ -1,13 +1,13 @@
-package com.example.demo;
+package org.bukola.stockmarket;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DemoApplication {
+public class StockMarketDashboardApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
+		SpringApplication.run(StockMarketDashboardApplication.class, args);
 	}
 
 }
