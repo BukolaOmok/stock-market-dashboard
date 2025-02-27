@@ -1,10 +1,8 @@
 spring:
   application:
     name: stock-market-dashboard
-
   autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
-
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 
   datasource:
     url: jdbc:postgresql://localhost:5432/stock_db
