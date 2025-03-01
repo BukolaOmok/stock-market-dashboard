@@ -23,8 +23,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public User(String username, String password) {
+    public User(String username, String password, Role role) {
         this.username = username;
         this.password = new BCryptPasswordEncoder().encode(password);
+        this.role = role;
     }
 }
