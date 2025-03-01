@@ -56,8 +56,8 @@ public class AuthController {
         }
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", Role.USER); // Add custom claims if needed
-        String token = JwtUtil.generateToken(user.getUsername(), claims);
+        claims.put("role", existingUser.getRole().name()); // Add the role to the claims
+        String token = JwtUtil.generateToken(existingUser.getUsername(), claims);
 
         return ResponseEntity.ok(new AuthResponse(token));
     }
