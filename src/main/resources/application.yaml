@@ -1,13 +1,16 @@
 spring:
   application:
     name: stock-market-dashboard
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+  security:
+    user:
+      name: user
+      password: password
 
   datasource:
     url: jdbc:postgresql://localhost:5432/stock_db
-    username: postgres
-    password: yourpassword
+    username: oluwabukolaomokehinde
+    password: mypassword
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
