@@ -36,3 +36,16 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+application.yml
+application.properties
+.env
+node_modules
+*.class
+*.jar
+*.war
+*.log
+logs/
+test-outputs/
+*.lcov
+coverage/
