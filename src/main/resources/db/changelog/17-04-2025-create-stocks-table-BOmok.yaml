@@ -1,0 +1,58 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_stock_table
+      author: BOmok
+      changes:
+        - createTable:
+            tableName: stocks
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: symbol
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: company_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: current_price
+                  type: DECIMAL(10,2)
+                  remarks: "Last traded price"
+              - column:
+                  name: day_change_percent
+                  type: DECIMAL(5,2)
+                  remarks: "Percentage change for the day"
+              - column:
+                  name: volume
+                  type: BIGINT
+                  remarks: "Trading volume in shares"
+              - column:
+                  name: market_cap
+                  type: VARCHAR(20)
+                  remarks: "Market capitalization category"
+              - column:
+                  name: pe_ratio
+                  type: DECIMAL(10,2)
+                  remarks: "Price-to-earnings ratio"
+              - column:
+                  name: sector
+                  type: VARCHAR(50)
+                  remarks: "Industry sector"
+              - column:
+                  name: last_updated
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+
+
+
