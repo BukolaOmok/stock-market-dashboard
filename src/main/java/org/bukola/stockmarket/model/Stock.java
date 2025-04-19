@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 @Table(name = "stocks")
 @Data
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Stock {
 
     @Id
