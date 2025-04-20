@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 1
+      id: create_user
       author: BOmok
       changes:
         - createTable:

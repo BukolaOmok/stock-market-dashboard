@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_watchlist_table
+      author: BOmok
+      changes:
+        - createTable:
+            tableName: watchlist
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_watchlist_user
+                    references: users(id)
+              - column:
+                  name: stock_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_watchlist_stock
+                    references: stocks(id)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+            remarks: "Maps users to their watched stocks"
+
+        - addUniqueConstraint:
+            tableName: watchlist
+            columnNames: user_id, stock_id
+            constraintName: uq_user_stock
+            remarks: "Prevent duplicate stock entries per user"

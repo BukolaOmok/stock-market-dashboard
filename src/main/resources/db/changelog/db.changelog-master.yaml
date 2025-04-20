@@ -1,3 +1,7 @@
 databaseChangeLog:
   - include:
       file: db/changelog/17-04-2025-create-user-table-BOmok.yaml
+  - include:
+      file: db/changelog/17-04-2025-create-stocks-table-BOmok.yaml
+  - include:
+      file: db/changelog/18-04-2025-create-watchlist-table-BOmok.yaml
