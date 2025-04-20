@@ -2,13 +2,13 @@ package org.bukola.stockmarket.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bukola.stockmarket.configuration.AlphaVantageConfig;
-import org.bukola.stockmarket.dto.alphavantage.AlphaVantageResponse;
-import org.bukola.stockmarket.dto.alphavantage.GlobalQuote;
-import org.bukola.stockmarket.dto.alphavantage.OverviewResponse;
+import org.bukola.stockmarket.dto.twelvedata.TwelveDataResponse;
 import org.bukola.stockmarket.model.Stock;
 import org.bukola.stockmarket.repository.StockRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,72 +20,77 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class StockDataLoader implements CommandLineRunner {
+    private static final List<String> SYMBOLS = List.of("AAPL", "MSFT", "GOOGL", "AMZN", "META");
+
     private final StockRepository stockRepo;
     private final RestTemplate restTemplate;
-    private final AlphaVantageConfig apiConfig;
+    private final SimpMessagingTemplate messagingTemplate;
+
+    @Value("${twelvedata.base.url}")
+    private String baseUrl;
+
+    @Value("${twelvedata.api.key}")
+    private String apiKey;
 
     @Override
     public void run(String... args) {
         if (stockRepo.count() == 0) {
-            List<String> symbols = List.of("AAPL", "MSFT", "GOOGL");
-            symbols.forEach(this::fetchAndSaveStock);
+            fetchAllStocks();
         }
+    }
+
+    @Scheduled(fixedRate = 300_000) // 5 minutes
+    public void refreshStocks() {
+        fetchAllStocks();
+    }
+
+    private void fetchAllStocks() {
+        SYMBOLS.forEach(symbol -> {
+            try {
+                fetchAndSaveStock(symbol);
+                Thread.sleep(1000); // 1 second delay between requests
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
     }
 
     private void fetchAndSaveStock(String symbol) {
         try {
-            GlobalQuote quote = fetchGlobalQuote(symbol);
-            OverviewResponse overview = fetchCompanyOverview(symbol);
-            Stock stock = mapToStockEntity(quote, overview);
+            TwelveDataResponse response = fetchFromTwelveData(symbol);
+            Stock stock = mapToStockEntity(response);
+
+            stockRepo.findBySymbol(symbol).ifPresent(existing -> stock.setId(existing.getId()));
             stockRepo.save(stock);
 
+            messagingTemplate.convertAndSend("/topic/stocks", stock);
+            log.info("Updated: {}", symbol);
+
         } catch (Exception e) {
-            log.error("Failed to fetch stock: {}", symbol, e);
+            log.error("Failed to fetch {}: {}", symbol, e.getMessage());
         }
     }
 
-    private GlobalQuote fetchGlobalQuote(String symbol) {
+    private TwelveDataResponse fetchFromTwelveData(String symbol) {
         String url = String.format(
-                "%s/query?function=GLOBAL_QUOTE&symbol=%s&apikey=%s",
-                apiConfig.getBaseUrl(), symbol, apiConfig.getKey()
+                "%s/quote?symbol=%s&apikey=%s",
+                baseUrl, symbol, apiKey
         );
-        AlphaVantageResponse response = restTemplate.getForObject(url, AlphaVantageResponse.class);
-        return response != null ? response.getGlobalQuote() : null;
+
+        log.debug("Fetching: {}", url);
+        return restTemplate.getForObject(url, TwelveDataResponse.class);
     }
 
-    private OverviewResponse fetchCompanyOverview(String symbol) {
-        String url = String.format(
-                "%s/query?function=OVERVIEW&symbol=%s&apikey=%s",
-                apiConfig.getBaseUrl(), symbol, apiConfig.getKey()
-        );
-        return restTemplate.getForObject(url, OverviewResponse.class);
-    }
-
-    private Stock mapToStockEntity(GlobalQuote quote, OverviewResponse overview) {
-        if (quote == null || overview == null) return null;
-
+    private Stock mapToStockEntity(TwelveDataResponse response) {
         return Stock.builder()
-                .symbol(quote.getSymbol())
-                .companyName(overview.getName())
-                .currentPrice(quote.getPrice())
-                .dayChangePercent(parsePercent(quote.getChangePercent()))
-                .volume(quote.getVolume())
-                .marketCap(parseMarketCap(overview.getMarketCap()))
-                .peRatio(parseBigDecimal(overview.getPeRatio()))
-                .sector(overview.getSector())
+                .symbol(response.getSymbol())
+                .companyName(response.getName())
+                .currentPrice(new BigDecimal(response.getPrice()))
+                .dayChangePercent(new BigDecimal(response.getChangePercent().replace("%", "")))
+                .volume(Long.parseLong(response.getVolume()))
+                .marketCap(response.getMarket_cap())
+                .sector(response.getSector())
                 .lastUpdated(LocalDateTime.now())
                 .build();
-    }
-
-    private BigDecimal parsePercent(String percentStr) {
-        return new BigDecimal(percentStr.replace("%", ""));
-    }
-
-    private String parseMarketCap(String marketCapStr) {
-        return marketCapStr;
-    }
-
-    private BigDecimal parseBigDecimal(String numberStr) {
-        return numberStr != null ? new BigDecimal(numberStr) : null;
     }
 }
