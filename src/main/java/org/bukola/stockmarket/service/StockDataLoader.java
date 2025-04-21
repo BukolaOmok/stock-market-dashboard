@@ -114,8 +114,6 @@ public class StockDataLoader implements CommandLineRunner {
                 .currentPrice(new BigDecimal(response.getPrice()))
                 .dayChangePercent(new BigDecimal(response.getChangePercent().replace("%", "")))
                 .volume(Long.parseLong(response.getVolume()))
-                .marketCap(response.getMarket_cap())
-                .sector(response.getSector())
                 .lastUpdated(LocalDateTime.now())
                 .build();
     }

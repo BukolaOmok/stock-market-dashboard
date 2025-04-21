@@ -32,13 +32,5 @@ public class Stock {
 
     private Long volume;
 
-    private String marketCap;
-
-    @Column(precision = 10, scale = 2)
-    private BigDecimal peRatio;
-
-    @Column(length = 50)
-    private String sector;
-
     private LocalDateTime lastUpdated;
 }

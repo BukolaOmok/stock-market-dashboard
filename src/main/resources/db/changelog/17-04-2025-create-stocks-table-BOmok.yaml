@@ -37,18 +37,6 @@ databaseChangeLog:
                   type: BIGINT
                   remarks: "Trading volume in shares"
               - column:
-                  name: market_cap
-                  type: VARCHAR(20)
-                  remarks: "Market capitalization category"
-              - column:
-                  name: pe_ratio
-                  type: DECIMAL(10,2)
-                  remarks: "Price-to-earnings ratio"
-              - column:
-                  name: sector
-                  type: VARCHAR(50)
-                  remarks: "Industry sector"
-              - column:
                   name: last_updated
                   type: TIMESTAMP
                   defaultValueComputed: CURRENT_TIMESTAMP
