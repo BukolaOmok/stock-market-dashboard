@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StockService implements IStockService {
 
-    private StockRepository stockRepository;
-    private CacheManager cacheManager;
-    private SimpMessagingTemplate messagingTemplate;
+    private final StockRepository stockRepository;
+    private final CacheManager cacheManager;
+    private final SimpMessagingTemplate messagingTemplate;
 
 
     @Override
