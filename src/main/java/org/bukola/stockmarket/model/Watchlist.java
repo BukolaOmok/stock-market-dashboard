@@ -15,11 +15,11 @@ public class Watchlist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
+    @OneToMany
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
+    @ManyToMany
     @JoinColumn(name = "stock_id", nullable = false)
     private Stock stock;
 
