@@ -1,4 +1,4 @@
-package org.bukola.stockmarket.service.stock.interfaces;
+package org.bukola.stockmarket.service.interfaces;
 
 import org.bukola.stockmarket.model.Stock;
 

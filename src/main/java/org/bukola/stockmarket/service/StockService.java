@@ -1,10 +1,10 @@
-package org.bukola.stockmarket.service.stock;
+package org.bukola.stockmarket.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bukola.stockmarket.model.Stock;
 import org.bukola.stockmarket.repository.StockRepository;
-import org.bukola.stockmarket.service.stock.interfaces.IStockService;
+import org.bukola.stockmarket.service.interfaces.IStockService;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
