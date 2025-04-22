@@ -28,13 +28,7 @@ class StockServiceTest {
     private StockRepository stockRepository;
 
     @Mock
-    private CacheManager cacheManager;
-
-    @Mock
     private Cache cache;
-
-    @Mock
-    private SimpMessagingTemplate messagingTemplate;
 
     @InjectMocks
     private StockService stockService;

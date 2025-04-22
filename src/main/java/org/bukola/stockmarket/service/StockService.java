@@ -20,8 +20,6 @@ import java.util.stream.Collectors;
 public class StockService implements IStockService {
 
     private final StockRepository stockRepository;
-    private final CacheManager cacheManager;
-    private final SimpMessagingTemplate messagingTemplate;
 
 
     @Override

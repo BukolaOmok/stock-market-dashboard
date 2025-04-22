@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 @Table(name = "watchlist")
 @Data
 @NoArgsConstructor
-
+@Builder
+@AllArgsConstructor
 public class Watchlist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
