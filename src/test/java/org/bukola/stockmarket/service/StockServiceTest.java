@@ -1,4 +1,4 @@
-package org.bukola.stockmarket.service.stock;
+package org.bukola.stockmarket.service;
 
 import org.bukola.stockmarket.model.Stock;
 import org.bukola.stockmarket.repository.StockRepository;
@@ -10,8 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
