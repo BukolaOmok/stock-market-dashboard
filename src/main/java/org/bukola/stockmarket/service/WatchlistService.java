@@ -10,9 +10,9 @@ import org.bukola.stockmarket.repository.UserRepository;
 import org.bukola.stockmarket.repository.WatchlistRepository;
 import org.bukola.stockmarket.service.interfaces.IStockService;
 import org.bukola.stockmarket.service.interfaces.IWatchlistService;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -41,8 +41,9 @@ public class WatchlistService implements IWatchlistService {
         }
 
         Watchlist watchlist = Watchlist.builder()
-                .user(user)
                 .stock(stock)
+                .user(user)
+                .createdAt(LocalDateTime.now())
                 .build();
 
         return watchlistRepository.save(watchlist);

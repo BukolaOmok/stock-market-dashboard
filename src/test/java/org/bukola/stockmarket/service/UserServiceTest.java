@@ -5,7 +5,6 @@ import org.bukola.stockmarket.dto.RegisterRequest;
 import org.bukola.stockmarket.enums.Role;
 import org.bukola.stockmarket.model.User;
 import org.bukola.stockmarket.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
