@@ -25,7 +25,7 @@ public class WatchlistService implements IWatchlistService {
 
     @Override
     public List<Stock> getUserWatchlist(String userName) {
-        User user = userRepository.findByUsername(userName).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByUsername(userName).orElseThrow(() -> new EntityNotFoundException("User not found"));
         return watchlistRepository.findStocksByUser(user);
     }
 
@@ -64,7 +64,7 @@ public class WatchlistService implements IWatchlistService {
     }
 
     @Override
-    public boolean isStockInWatchlist(String symbol, String username) {
+    public boolean isStockInWatchlist(String username, String symbol) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 

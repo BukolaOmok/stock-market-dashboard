@@ -126,7 +126,7 @@ public class WatchlistServiceTest {
             User user = new User("Bukola", "$2a$10$encodedPassword", Role.USER);
             when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
 
-            assertThrows(RuntimeException.class, () -> watchlistService.getUserWatchlist(user.getUsername()));
+            assertThrows(EntityNotFoundException.class, () -> watchlistService.getUserWatchlist(user.getUsername()));
 
             verify(userRepository).findByUsername(user.getUsername());
         }
@@ -143,6 +143,27 @@ public class WatchlistServiceTest {
             watchlistService.getUserWatchlist(user.getUsername());
 
             verify(userRepository).findByUsername(user.getUsername());
+        }
+    }
+
+    @Nested
+    @DisplayName("When user tries to confirm if stock is in watchlist")
+    class IsStockInWatchlist {
+        @Test
+        @DisplayName("Then return true if stock exists in watchlist")
+        void isStockInWatchlist_succeeds_ifStockIsInWatchlist () {
+            User user = new User("Bukola", "$2a$10$encodedPassword", Role.USER);
+            Stock stockInWatchlist = new Stock(2,	"AAPL", "Apple Inc.", BigDecimal.valueOf(196.98),	BigDecimal.valueOf(1.39),	51334300L, LocalDateTime.of(2025, 4, 21, 13, 53));
+
+            when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+            when(watchlistRepository.existsByUserAndStock(user, stockInWatchlist)).thenReturn(true);
+            when(stockService.getStockBySymbol(stockInWatchlist.getSymbol())).thenReturn(stockInWatchlist);
+
+            watchlistService.isStockInWatchlist(user.getUsername(), stockInWatchlist.getSymbol());
+
+            verify(userRepository).findByUsername(user.getUsername());
+            verify(stockService).getStockBySymbol(stockInWatchlist.getSymbol());
+            verify(watchlistRepository).existsByUserAndStock(user, stockInWatchlist);
         }
     }
 }
