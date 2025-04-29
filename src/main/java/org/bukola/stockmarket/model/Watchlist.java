@@ -6,7 +6,15 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "watchlist")
+@Table(name = "watchlists",
+indexes = {
+        @Index(name = "idx_watchlist_user_stock",
+                columnList = "user_id, stock_id",
+                unique = true),
+
+        @Index(name = "idx_watchlist_user",
+                columnList = "user_id")
+})
 @Data
 @NoArgsConstructor
 @Builder
@@ -14,13 +22,13 @@ import java.time.LocalDateTime;
 public class Watchlist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @OneToMany
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToMany
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "stock_id", nullable = false)
     private Stock stock;
 
