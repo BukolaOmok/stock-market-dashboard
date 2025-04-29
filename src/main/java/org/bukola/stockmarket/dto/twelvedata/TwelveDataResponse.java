@@ -18,6 +18,4 @@ public class TwelveDataResponse {
     private String changePercent;
 
     private String volume;
-    private String market_cap;
-    private String sector;
 }
