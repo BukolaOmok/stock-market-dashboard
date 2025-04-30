@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.bukola.stockmarket.dto.twelvedata.TwelveDataResponse;
 import org.bukola.stockmarket.model.Stock;
 import org.bukola.stockmarket.repository.StockRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.cache.CacheManager;
@@ -18,10 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -35,6 +31,7 @@ public class StockDataLoader implements CommandLineRunner {
     private final StockRepository stockRepo;
     private final RestTemplate restTemplate;
     private final SimpMessagingTemplate messagingTemplate;
+    private final CacheManager cacheManager;
 
     @Value("${twelvedata.base.url}")
     private String baseUrl;
@@ -72,30 +69,41 @@ public class StockDataLoader implements CommandLineRunner {
         });
     }
 
-    private void fetchAndSaveStock(String symbol) {
-            try {
-                // First try to get from cache
-                Stock cachedStock = getCachedStock(symbol);
-                if (cachedStock != null &&
-                        cachedStock.getLastUpdated().isAfter(LocalDateTime.now().minusMinutes(1))) {
-                    messagingTemplate.convertAndSend("/topic/stocks", cachedStock);
-                    return;
-                }
-
-                TwelveDataResponse response = fetchFromTwelveData(symbol);
-                Stock stock = mapToStockEntity(response);
-
-                stockRepo.findBySymbol(symbol).ifPresent(existing -> stock.setId(existing.getId()));
-                stockRepo.save(stock);
-                cacheManager.getCache("stocks").put(symbol, stock);
-
-                messagingTemplate.convertAndSend("/topic/stocks", stock);
-                log.info("Updated: {}", symbol);
-
-            } catch (Exception e) {
-                log.error("Failed to fetch {}: {}", symbol, e.getMessage());
+    void fetchAndSaveStock(String symbol) {
+        try {
+            // 1. Check cache first (1 minute threshold)
+            Stock cachedStock = getCachedStock(symbol);
+            if (cachedStock != null && cachedStock.getLastUpdated()
+                    .isAfter(LocalDateTime.now().minusMinutes(1))) {
+                messagingTemplate.convertAndSend("/topic/stocks", cachedStock);
+                return;
             }
+
+            // 2. Check database (5 minute threshold - matches your refresh rate)
+            Optional<Stock> dbStock = stockRepo.findBySymbol(symbol);
+            if (dbStock.isPresent() && dbStock.get().getLastUpdated()
+                    .isAfter(LocalDateTime.now().minusMinutes(5))) {
+                // Use DB data if fresh enough
+                cacheManager.getCache("stocks").put(symbol, dbStock.get());
+                messagingTemplate.convertAndSend("/topic/stocks", dbStock.get());
+                return;
+            }
+
+            // 3. Fetch from API if data is stale or missing
+            TwelveDataResponse response = fetchFromTwelveData(symbol);
+            Stock freshStock = mapToStockEntity(response);
+
+            // Update existing or create new
+            dbStock.ifPresent(existing -> freshStock.setId(existing.getId()));
+            stockRepo.save(freshStock);
+            cacheManager.getCache("stocks").put(symbol, freshStock);
+
+            messagingTemplate.convertAndSend("/topic/stocks", freshStock);
+            log.info("Updated: {}", symbol);
+        } catch (Exception e) {
+            log.error("Failed to fetch {}: {}", symbol, e.getMessage());
         }
+    }
 
     private TwelveDataResponse fetchFromTwelveData(String symbol) {
         String url = String.format(
@@ -118,8 +126,6 @@ public class StockDataLoader implements CommandLineRunner {
                 .build();
     }
 
-    @Autowired
-    private CacheManager cacheManager;
 
     public Map<String, String> getCacheStats () {
         CaffeineCache cache = (CaffeineCache) cacheManager.getCache("stocks");

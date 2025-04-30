@@ -1,6 +1,7 @@
 package org.bukola.stockmarket.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 import org.bukola.stockmarket.enums.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,49 +13,30 @@ import java.util.Collections;
 
 @Entity
 @Table(name = "users")
+@Data
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Setter
     @Column(unique=true, nullable=false)
     private String username;
 
+    @Setter
     @Column(nullable = false)
     private String password;
 
+    @Getter
     @Enumerated(EnumType.STRING)
     private Role role;
 
     public User(String username, String password, Role role) {
         this.username = username;
         this.password = new BCryptPasswordEncoder().encode(password);
-        this.role = role;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    public Role getRole () {
-        return role;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setUsername (String username) {
-        this.username = username;
-    }
-
-    public void setRole(Role role) {
         this.role = role;
     }
 
