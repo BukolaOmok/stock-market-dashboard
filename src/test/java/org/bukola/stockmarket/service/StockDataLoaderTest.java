@@ -30,6 +30,7 @@ public class StockDataLoaderTest {
     @Mock private Cache cache;
     @Mock private RestTemplate restTemplate;
     @Mock private SimpMessagingTemplate messagingTemplate;
+
     @InjectMocks private StockDataLoader stockDataLoader;
 
     @Test
