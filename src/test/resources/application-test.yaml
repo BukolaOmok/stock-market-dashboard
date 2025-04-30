@@ -25,9 +25,5 @@ spring:
   cache:
     type: simple
 
-twelvedata:
-  base-url: http://localhost:8081/mock-api
-  api-key: test-api-key
-
 server:
   port: 0
