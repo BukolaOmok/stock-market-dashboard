@@ -1,7 +1,9 @@
 package org.bukola.stockmarket.service;
 
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.bukola.stockmarket.dto.twelvedata.TwelveDataResponse;
 import org.bukola.stockmarket.model.Stock;
@@ -33,9 +35,14 @@ public class StockDataLoader implements CommandLineRunner {
     private final SimpMessagingTemplate messagingTemplate;
     private final CacheManager cacheManager;
 
+    @Getter
+    @Setter
     @Value("${twelvedata.base.url}")
     private String baseUrl;
 
+
+    @Getter
+    @Setter
     @Value("${twelvedata.api.key}")
     private String apiKey;
 
