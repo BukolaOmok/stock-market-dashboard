@@ -12,3 +12,9 @@ spring:
   sql:
     init:
       mode: never
+
+twelvedata:
+base:
+  url: "http://mock-url-for-testing"
+api:
+  key: "mock-api-key-for-testing"
