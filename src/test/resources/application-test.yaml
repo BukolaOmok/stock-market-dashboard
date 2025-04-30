@@ -1,29 +1,23 @@
 spring:
-  application:
-    name: stock-market-dashboard-test
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_UPPER=false
     username: sa
     password: ""
     driver-class-name: org.h2.Driver
-    hikari:
-      driver-class-name: org.h2.Driver
 
   jpa:
     hibernate:
       ddl-auto: create-drop
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
-        format_sql: true
         dialect: org.hibernate.dialect.H2Dialect
-        javax.persistence.schema-generation.database.action: none
+        # Disable schema validation
+        javax.persistence.validation.mode: none
 
   liquibase:
     enabled: false
 
-  cache:
-    type: simple
-
-server:
-  port: 0
+  test:
+    database:
+      replace: none
