@@ -3,6 +3,7 @@ package org.bukola.stockmarket.service;
 import org.bukola.stockmarket.dto.twelvedata.TwelveDataResponse;
 import org.bukola.stockmarket.model.Stock;
 import org.bukola.stockmarket.repository.StockRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -33,6 +34,12 @@ public class StockDataLoaderTest {
 
     @InjectMocks private StockDataLoader stockDataLoader;
 
+    @BeforeEach
+    void setUp() {
+        // Override the URL properties for testing
+        stockDataLoader.setBaseUrl("http://test-mock-url");
+        stockDataLoader.setApiKey("test-key");
+    }
     @Test
     public void testCacheHit_shouldNotAccessDb() {
         Stock cachedStock = new Stock();
