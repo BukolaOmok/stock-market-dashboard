@@ -1,0 +1,41 @@
+# Stock Market Dashboard
+
+The Stock Market Dashboard is a Java-based application that provides real-time stock data updates, caching, and analytics. It integrates with the Twelve Data API to fetch stock information and uses Spring Boot for backend services.
+
+## Features
+
+- Fetches and updates stock data for predefined symbols (e.g., AAPL, MSFT, GOOGL).
+- Caches stock data for improved performance and reduced API calls.
+- Provides real-time updates via WebSocket messaging.
+- Tracks and logs cache statistics.
+- Supports scheduled refreshes for stock data and cache.
+- Configurable profiles for different environments (e.g., `test`, `ci`).
+
+## Project Management
+ The development of this project was organised and managed using Jira. The features were broken down into manageable tasks and tracked for progress. You can view the Jira board for this project [https://omokehindeoluwabukola.atlassian.net/jira/software/projects/MFLP/boards/1?atlOrigin=eyJpIjoiNTY0NWEyMzJjMzVmNDA4ZGExZDFmZWRjYzJiOWEzYTciLCJwIjoiaiJ9].
+
+## Technologies Used
+
+- **Java**: Core programming language.
+- **Spring Boot**: Framework for building the application.
+- **Maven**: Dependency management and build tool.
+- **PostgreSQL**: Database for storing stock data.
+- **Caffeine Cache**: In-memory caching for stock data.
+- **Twelve Data API**: External API for fetching stock market data.
+- **WebSocket**: Real-time messaging for stock updates.
+- **JUnit**: Testing framework for unit and integration tests.
+
+## Prerequisites
+
+- Java 17 or higher
+- Maven 3.8+
+- PostgreSQL database
+- Twelve Data API key
+
+## Getting Started
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/BukolaOmok/stock-market-dashboard.git
+cd stock-market-dashboard
