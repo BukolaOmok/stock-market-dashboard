@@ -3,10 +3,10 @@ package org.bukola.stockmarket.service;
 import org.bukola.stockmarket.dto.twelvedata.TwelveDataResponse;
 import org.bukola.stockmarket.model.Stock;
 import org.bukola.stockmarket.repository.StockRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.cache.Cache;
@@ -30,18 +30,7 @@ public class StockDataLoaderTest {
     @Mock private Cache cache;
     @Mock private RestTemplate restTemplate;
     @Mock private SimpMessagingTemplate messagingTemplate;
-
-    private StockDataLoader stockDataLoader;
-
-    @BeforeEach
-    void setUp() {
-        stockDataLoader = new StockDataLoader(
-                stockRepo,
-                restTemplate,
-                messagingTemplate,
-                cacheManager
-        );
-    }
+    @InjectMocks private StockDataLoader stockDataLoader;
 
     @Test
     public void testCacheHit_shouldNotAccessDb() {
