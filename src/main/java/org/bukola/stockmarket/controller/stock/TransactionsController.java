@@ -18,18 +18,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/portfolio")
 @RequiredArgsConstructor
 public class TransactionsController {
 
     private final ITradingService tradingService;
     private final PortfolioRepository portfolioRepository;
-    private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
-    private final StockRepository stockRepository;
 
     // Buy stock
-    @PostMapping("/portfolio/buy")
+    @PostMapping("/buy")
     public void buyStock(@RequestParam String symbol,
                          @RequestParam BigDecimal quantity,
                          @RequestParam BigDecimal pricePerShare,
@@ -43,7 +41,7 @@ public class TransactionsController {
     }
 
     // Sell stock
-    @PostMapping("/portfolio/sell")
+    @PostMapping("/sell")
     public void sellStock(@RequestParam String symbol,
                           @RequestParam BigDecimal quantity,
                           @RequestParam BigDecimal pricePerShare,
@@ -57,7 +55,7 @@ public class TransactionsController {
     }
 
     // Get portfolio for current user
-    @GetMapping("/portfolio")
+    @GetMapping("/")
     public List<PortfolioDto> getPortfolio(Principal principal) {
         var user = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -69,26 +67,6 @@ public class TransactionsController {
                         .stockSymbol(p.getStock().getSymbol())
                         .quantityOwned(p.getQuantityOwned())
                         .averagePurchasePrice(p.getAveragePurchasePrice())
-                        .build())
-                .collect(Collectors.toList());
-    }
-
-    // Get historical transactions
-    @GetMapping("/transactions")
-    public List<TransactionsDto> getTransactions(Principal principal) {
-        var user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        List<Transaction> transactions = transactionRepository.findByUser(user);
-
-        return transactions.stream().map(tx -> TransactionsDto.builder()
-                        .id(tx.getId())
-                        .username(user.getUsername())
-                        .stockSymbol(tx.getStock().getSymbol())
-                        .transactionType(tx.getTransactionType())
-                        .quantity(tx.getQuantity())
-                        .pricePerShare(tx.getPricePerShare())
-                        .transactionTimestamp(tx.getTransactionTimestamp())
                         .build())
                 .collect(Collectors.toList());
     }

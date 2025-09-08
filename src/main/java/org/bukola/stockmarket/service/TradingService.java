@@ -2,6 +2,10 @@ package org.bukola.stockmarket.service;
 
 import lombok.RequiredArgsConstructor;
 import org.bukola.stockmarket.enums.TransactionType;
+import org.bukola.stockmarket.exceptions.InsufficientSharesException;
+import org.bukola.stockmarket.exceptions.InvalidQuantityException;
+import org.bukola.stockmarket.exceptions.StockNotFoundException;
+import org.bukola.stockmarket.exceptions.UserNotFoundException;
 import org.bukola.stockmarket.model.*;
 import org.bukola.stockmarket.repository.*;
 import org.bukola.stockmarket.service.interfaces.ITradingService;
@@ -23,10 +27,14 @@ public class TradingService implements ITradingService {
     @Transactional
     public void buyStock(Long userId, String symbol, BigDecimal quantity, BigDecimal pricePerShare) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        if (quantity.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new InvalidQuantityException("Quantity must be greater than zero");
+        }
 
         Stock stock = stockRepository.findBySymbol(symbol)
-                .orElseThrow(() -> new RuntimeException("Stock not found"));
+                .orElseThrow(() -> new StockNotFoundException(symbol));
 
         Portfolio portfolio = portfolioRepository.findByUserAndStock(user, stock)
                 .orElse(Portfolio.builder()
@@ -70,7 +78,7 @@ public class TradingService implements ITradingService {
                 .orElseThrow(() -> new RuntimeException("Stock not in portfolio"));
 
         if (portfolio.getQuantityOwned().compareTo(quantity) < 0) {
-            throw new RuntimeException("Not enough shares to sell");
+            throw new InsufficientSharesException("Not enough shares to sell");
         }
 
         BigDecimal newQuantity = portfolio.getQuantityOwned().subtract(quantity);
