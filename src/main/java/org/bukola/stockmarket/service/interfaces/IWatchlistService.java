@@ -1,5 +1,6 @@
 package org.bukola.stockmarket.service.interfaces;
 
+import org.bukola.stockmarket.dto.watchlist.WatchlistStockPriceDto;
 import org.bukola.stockmarket.model.Stock;
 import org.bukola.stockmarket.model.Watchlist;
 
@@ -13,4 +14,6 @@ public interface IWatchlistService {
     void removeFromWatchlist(String symbol, String username);
 
     boolean isStockInWatchlist(String symbol, String username);
+
+    List<WatchlistStockPriceDto> getWatchlistWithPrices(String username);
 }

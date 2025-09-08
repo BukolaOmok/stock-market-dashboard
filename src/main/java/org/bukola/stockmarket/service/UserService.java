@@ -16,9 +16,10 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Override
     public User registerUser(RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username exists");
+            throw new RuntimeException("Username already exists");
         }
 
         User user = new User(
@@ -30,6 +31,7 @@ public class UserService implements IUserService {
         return userRepository.save(user);
     }
 
+    @Override
     public User authenticateUser(LoginRequest request) {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -41,3 +43,4 @@ public class UserService implements IUserService {
         return user;
     }
 }
+

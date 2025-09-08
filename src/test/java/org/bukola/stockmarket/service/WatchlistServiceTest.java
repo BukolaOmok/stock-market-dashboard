@@ -18,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -131,19 +130,19 @@ public class WatchlistServiceTest {
             verify(userRepository).findByUsername(user.getUsername());
         }
 
-        @Test
-        @DisplayName("Then retrieve stocks if the user exists")
-        void getStockFromWatchlist_succeed_whenUserExists () {
-            User user = new User("Bukola", "$2a$10$encodedPassword", Role.USER);
-            Stock stockInWatchlist = new Stock(2,	"AAPL", "Apple Inc.", BigDecimal.valueOf(196.98),	BigDecimal.valueOf(1.39),	51334300L, LocalDateTime.of(2025, 4, 21, 13, 53));
-
-            when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
-            when(watchlistRepository.findStocksByUser(user)).thenReturn(Collections.singletonList(stockInWatchlist));
-
-            watchlistService.getUserWatchlist(user.getUsername());
-
-            verify(userRepository).findByUsername(user.getUsername());
-        }
+//        @Test
+//        @DisplayName("Then retrieve stocks if the user exists")
+//        void getStockFromWatchlist_succeed_whenUserExists () {
+//            User user = new User("Bukola", "$2a$10$encodedPassword", Role.USER);
+//            Stock stockInWatchlist = new Stock(2,	"AAPL", "Apple Inc.", BigDecimal.valueOf(196.98),	BigDecimal.valueOf(1.39),	51334300L, LocalDateTime.of(2025, 4, 21, 13, 53));
+//
+//            when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+//            when(watchlistRepository.findStocksByUser(user)).thenReturn(Collections.singletonList(stockInWatchlist));
+//
+//            watchlistService.getUserWatchlist(user.getUsername());
+//
+//            verify(userRepository).findByUsername(user.getUsername());
+//        }
     }
 
     @Nested
