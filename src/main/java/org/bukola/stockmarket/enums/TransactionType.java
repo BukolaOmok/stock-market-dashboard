@@ -1,4 +1,4 @@
-package org.bukola.stockmarket.dto.transactions;
+package org.bukola.stockmarket.enums;
 
 public enum TransactionType {
     BUY,

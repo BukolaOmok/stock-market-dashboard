@@ -1,11 +1,22 @@
 package org.bukola.stockmarket.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.bukola.stockmarket.enums.TransactionType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class Transactions {
+@Entity
+@Table(name = "transaction")
+@Data
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
+public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,11 +29,11 @@ public class Transactions {
     @JoinColumn(name = "stock_id", nullable = false)
     private Stock stock;
 
-    private String transactionType;
+    private TransactionType transactionType;
 
     private BigDecimal quantity;
 
     private BigDecimal pricePerShare;
 
-    private LocalDateTime transactionTimeStamp;
+    private LocalDateTime transactionTimestamp;
 }
