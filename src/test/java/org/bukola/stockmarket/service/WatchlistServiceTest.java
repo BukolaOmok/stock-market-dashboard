@@ -48,7 +48,7 @@ public class WatchlistServiceTest {
         @DisplayName("Then user cannot add stock that already exists in watchlist")
         void addStockToWatchlist_throwsException_whenStocksExistsInWatchList() {
             User user = new User("Bukola", "$2a$10$encodedPassword", Role.USER);
-            Stock stockInWatchlist = new Stock(2,	"AAPL", "Apple Inc.", BigDecimal.valueOf(196.98),	BigDecimal.valueOf(1.39),	51334300L, LocalDateTime.of(2025, 4, 21, 13, 53));
+            Stock stockInWatchlist = new Stock(2L,	"AAPL", "Apple Inc.", BigDecimal.valueOf(196.98),	BigDecimal.valueOf(1.39),	51334300L, LocalDateTime.of(2025, 4, 21, 13, 53));
 
             when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
             when(stockService.getStockBySymbol(stockInWatchlist.getSymbol())).thenReturn(stockInWatchlist);
@@ -63,7 +63,7 @@ public class WatchlistServiceTest {
         @DisplayName("Then stock is added when not already existing in watchlist")
         void addStockToWatchlist_succeeds_whenStockNotInWatchlist() {
             User user = new User("Bukola", "$2a$10$encodedPassword", Role.USER);
-            Stock stockInWatchlist = new Stock(2,	"AAPL", "Apple Inc.", BigDecimal.valueOf(196.98),	BigDecimal.valueOf(1.39),	51334300L, LocalDateTime.of(2025, 4, 21, 13, 53));
+            Stock stockInWatchlist = new Stock(2L,	"AAPL", "Apple Inc.", BigDecimal.valueOf(196.98),	BigDecimal.valueOf(1.39),	51334300L, LocalDateTime.of(2025, 4, 21, 13, 53));
 
             when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
             when(stockService.getStockBySymbol(stockInWatchlist.getSymbol())).thenReturn(stockInWatchlist);
@@ -89,7 +89,7 @@ public class WatchlistServiceTest {
         @DisplayName("Then user cannot remove the stock if it does not already exists in the watchlist")
         void removeStockFromWatchlist_throwsException_whenStockNotInWatchlist() {
             User user = new User("Bukola", "$2a$10$encodedPassword", Role.USER);
-            Stock stockInWatchlist = new Stock(2,	"AAPL", "Apple Inc.", BigDecimal.valueOf(196.98),	BigDecimal.valueOf(1.39),	51334300L, LocalDateTime.of(2025, 4, 21, 13, 53));
+            Stock stockInWatchlist = new Stock(2L,	"AAPL", "Apple Inc.", BigDecimal.valueOf(196.98),	BigDecimal.valueOf(1.39),	51334300L, LocalDateTime.of(2025, 4, 21, 13, 53));
 
             when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
             when(stockService.getStockBySymbol(stockInWatchlist.getSymbol())).thenReturn(stockInWatchlist);
@@ -104,7 +104,7 @@ public class WatchlistServiceTest {
         @DisplayName("Then user can remove stock if it exists in the watchlist")
         void removeStockFromWatchlist_succeeds_whenStockExistsInWatchList () {
             User user = new User("Bukola", "$2a$10$encodedPassword", Role.USER);
-            Stock stockInWatchlist = new Stock(2,	"AAPL", "Apple Inc.", BigDecimal.valueOf(196.98),	BigDecimal.valueOf(1.39),	51334300L, LocalDateTime.of(2025, 4, 21, 13, 53));
+            Stock stockInWatchlist = new Stock(2L,	"AAPL", "Apple Inc.", BigDecimal.valueOf(196.98),	BigDecimal.valueOf(1.39),	51334300L, LocalDateTime.of(2025, 4, 21, 13, 53));
 
             when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
             when(stockService.getStockBySymbol(stockInWatchlist.getSymbol())).thenReturn(stockInWatchlist);
@@ -152,7 +152,7 @@ public class WatchlistServiceTest {
         @DisplayName("Then return true if stock exists in watchlist")
         void isStockInWatchlist_succeeds_ifStockIsInWatchlist () {
             User user = new User("Bukola", "$2a$10$encodedPassword", Role.USER);
-            Stock stockInWatchlist = new Stock(2,	"AAPL", "Apple Inc.", BigDecimal.valueOf(196.98),	BigDecimal.valueOf(1.39),	51334300L, LocalDateTime.of(2025, 4, 21, 13, 53));
+            Stock stockInWatchlist = new Stock(2L,	"AAPL", "Apple Inc.", BigDecimal.valueOf(196.98),	BigDecimal.valueOf(1.39),	51334300L, LocalDateTime.of(2025, 4, 21, 13, 53));
 
             when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
             when(watchlistRepository.existsByUserAndStock(user, stockInWatchlist)).thenReturn(true);
