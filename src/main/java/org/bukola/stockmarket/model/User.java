@@ -46,23 +46,33 @@ public class User implements UserDetails {
     }
 
     @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
     public boolean isAccountNonExpired() {
-        return true; // Account never expires
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true; // Account is never locked
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true; // Credentials never expire
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return true; // Account is always enabled
+        return true;
     }
 
 }

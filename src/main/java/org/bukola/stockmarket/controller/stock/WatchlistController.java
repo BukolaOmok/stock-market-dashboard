@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.bukola.stockmarket.dto.watchlist.WatchlistRequest;
 import org.bukola.stockmarket.dto.watchlist.WatchlistResponse;
+import org.bukola.stockmarket.dto.watchlist.WatchlistStockPriceDto;
 import org.bukola.stockmarket.model.Stock;
 import org.bukola.stockmarket.model.User;
 import org.bukola.stockmarket.model.Watchlist;
@@ -81,4 +82,12 @@ public class WatchlistController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary =  "Retrieve Stock Prices for Watchlist Items")
+    @GetMapping("/prices")
+    public ResponseEntity<List<WatchlistStockPriceDto>> getWatchlistPrices(
+            @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(
+                watchlistService.getWatchlistWithPrices(user.getUsername())
+        );
+    }
 }

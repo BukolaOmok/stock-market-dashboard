@@ -86,7 +86,7 @@ public class StockDataLoader implements CommandLineRunner {
                 return;
             }
 
-            // 2. Check database (5 minute threshold - matches your refresh rate)
+            // 2. Check database (5 minute threshold - matches refresh rate)
             Optional<Stock> dbStock = stockRepo.findBySymbol(symbol);
             if (dbStock.isPresent() && dbStock.get().getLastUpdated()
                     .isAfter(LocalDateTime.now().minusMinutes(5))) {
@@ -205,7 +205,7 @@ public class StockDataLoader implements CommandLineRunner {
         return stats;
     }
 
-    private Stock getCachedStock(String symbol) {
+    Stock getCachedStock(String symbol) {
         cacheAccessTracker.recordAccess(symbol);
         return cacheManager.getCache("stocks").get(symbol, Stock.class);
     }
